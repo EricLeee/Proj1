@@ -72,8 +72,102 @@ public class Ecosystem implements EcoGrid {
     @Override
     public Location findFirstEmptyNeighbor(Location position, int startDirection) {
         Location location = null;
+        Location temp = position;
         
-        return location;
+        final int west = 0;
+        final int north = 1;
+        final int east = 2;
+        final int south = 3;
+        final int last = 4;
+        int state = startDirection;
+        int i = 0;
+        
+        while (state < last && i < 4) {
+        	switch(state) {
+        	case west:
+        	    if (temp.getCol() == 0) {
+        			if (this.map[temp.getRow()][this.maxCols - 1] == null) {
+        				location = this.dueEast(temp);
+        				state = last;
+        				i++;
+        				break;
+        			} 
+        			
+        			state = north;
+        			i++;
+        			break;
+        		} else if (this.map[temp.getRow()][temp.getCol() - 1] == null) {
+        			location = new Location(temp.getRow(), temp.getCol() - 1);
+        			state = last;
+        			i++;
+        			break;
+        		}
+        		state = north;
+        		i++;
+        		break;
+        	case north:
+        		if (temp.getRow() == 0) {
+        			if (this.map[this.maxRows - 1][temp.getCol()] == null) {
+        				location = this.dueSouth(temp);
+        				state = last;
+        				i++;
+        				break;
+        			}
+        			state = east;
+        			i++;
+        			break;
+        		} else if (this.map[temp.getRow() - 1][temp.getCol()] == null) {
+        			location = new Location(temp.getRow() - 1, temp.getCol());
+        			state = last;
+        			i++;
+        			break;
+        		}
+        		state = east;
+        		i++;
+        		break;
+        	case east:
+        		if (temp.getCol() == this.maxCols - 1) {
+        			if (this.map[temp.getRow()][0] == null) {
+        				location = this.dueWest(temp);
+        				state = last;
+        				i++;
+        				break;
+        			}
+        			state = south;
+        			i++;
+        			break;
+        		} else if (this.map[temp.getRow()][temp.getCol() + 1] == null) {
+        			location = new Location(temp.getRow(), temp.getCol() + 1);
+        			state = last;
+        			i++;
+        			break;
+        		}
+        		state = south;
+        		i++;
+        		break;
+        	case south:
+        		if (temp.getRow() == this.maxRows - 1) {
+        			if (this.map[0][temp.getCol()] == null) {
+        				location = this.dueNorth(temp);
+        				state = last;
+        				i++;
+        				break;
+        			}
+        			state = west;
+        			i++;
+        			break;
+        		} else if (this.map[temp.getRow() + 1][temp.getCol()] == null) {
+        			location = new Location(temp.getRow() + 1, temp.getCol());
+        			state = last;
+        			i++;
+        			break;
+        		}
+        		state = west;
+        		i++;
+        		break;
+        	}
+        }
+		return location;
     }
 
     /**

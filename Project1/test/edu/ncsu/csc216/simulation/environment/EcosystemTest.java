@@ -57,4 +57,70 @@ public class EcosystemTest {
 		assertEquals(east.getCol(), eco.dueEast(loc).getCol());
 	
 	}
+	
+	/**
+	 * test findFirstNeighborEmptyNeighbor
+	 */
+	@Test
+	public void testFindFirstEmptyNeighbor() {
+		Location l = new Location(1, 1);
+		EcoGrid eco = new Ecosystem(3, 3);
+		PurePredator p = new PurePredator('l');
+		eco.add(p, l);
+		
+		assertEquals(1, eco.findFirstEmptyNeighbor(l, 0).getRow());
+		assertEquals(0, eco.findFirstEmptyNeighbor(l, 0).getCol());
+		
+		assertEquals(0, eco.findFirstEmptyNeighbor(l, 1).getRow());
+		assertEquals(1, eco.findFirstEmptyNeighbor(l, 1).getCol());
+		
+		assertEquals(1, eco.findFirstEmptyNeighbor(l, 2).getRow());
+		assertEquals(2, eco.findFirstEmptyNeighbor(l, 2).getCol());
+		
+		assertEquals(2, eco.findFirstEmptyNeighbor(l, 3).getRow());
+		assertEquals(1, eco.findFirstEmptyNeighbor(l, 3).getCol());
+		
+		p.act(l, eco);
+		assertEquals(0, eco.findFirstEmptyNeighbor(l, 0).getRow());
+		
+		Animal c = eco.getItemAt(new Location(1, 0));
+		assertEquals(2, eco.findFirstEmptyNeighbor(new Location(1, 0), 0).getCol());
+		c.act(new Location(1, 0), eco);
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(1, 0), 0).getRow());
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(1, 0), 0).getCol());
+		
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(0, 0), 0).getRow());
+		assertEquals(2, eco.findFirstEmptyNeighbor(new Location(0, 0), 0).getCol());
+		
+		eco.add(p, new Location(0, 2));
+		assertEquals(2, eco.findFirstEmptyNeighbor(new Location(0, 0), 0).getRow());
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(0, 0), 0).getCol());
+		
+		assertEquals(2, eco.findFirstEmptyNeighbor(new Location(2, 0), 0).getRow());
+		assertEquals(2, eco.findFirstEmptyNeighbor(new Location(2, 0), 0).getCol());
+		
+		eco.add(p, new Location(2, 0));
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(0, 0), 0).getRow());
+		assertEquals(1, eco.findFirstEmptyNeighbor(new Location(0, 0), 0).getCol());
+		
+		eco.remove(new Location(1, 0));
+		assertEquals(1, eco.findFirstEmptyNeighbor(new Location(1, 2), 0).getRow());
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(1, 2), 0).getCol());
+		
+		eco.add(p, new Location(2, 2));
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(2, 1), 0).getRow());
+		assertEquals(1, eco.findFirstEmptyNeighbor(new Location(2, 1), 0).getCol());
+		
+		eco.remove(new Location(2, 0));
+		eco.add(p, new Location(0, 1));
+		assertEquals(2, eco.findFirstEmptyNeighbor(new Location(2, 1), 3).getRow());
+		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(2, 1), 3).getCol());
+		
+		EcoGrid grid = new Ecosystem(3, 3);
+		grid.add(p, new Location(1, 0));
+		grid.add(p, new Location(1, 2));
+		assertEquals(2, grid.findFirstEmptyNeighbor(new Location(1, 2), 2).getRow());
+		
+		assertEquals(0, grid.findFirstEmptyNeighbor(new Location(0, 0), 3).getRow());
+	}
 }
