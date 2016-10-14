@@ -34,7 +34,9 @@ public class PurePredator extends Animal {
      */
     @Override
     public void act(Location location, EcoGrid ecoGrid) {
-        // TODO Auto-generated method stub
+        if(this.breed(location, ecoGrid)) {
+        	this.disable();
+        }
         
     }
 

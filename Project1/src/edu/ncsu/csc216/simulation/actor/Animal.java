@@ -137,7 +137,12 @@ public abstract class Animal {
      * @return true if the animal can breed
      */
     protected boolean breed(Location location, EcoGrid ecoGrid) {
-        return true;
+    	Location l = ecoGrid.findFirstEmptyNeighbor(location, 0);
+    	if (l != null) {
+    		ecoGrid.add(this.makeNewBaby(), l);
+    		return true;
+    	}
+        return false;
     }
     
     /**
