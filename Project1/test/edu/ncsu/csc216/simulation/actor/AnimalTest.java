@@ -57,7 +57,7 @@ public class AnimalTest {
         assertEquals(a1, eco.getItemAt(new Location(1, 2)));
         
         eco.add(a1, new Location(1, 1));
-        eco.add(a1, new Location(2, 1));
+        eco.add(b, new Location(2, 1));
         a1.eat(new Location(1, 1), eco);
         assertNull(eco.getItemAt(new Location(1, 1)));
         assertEquals(a1, eco.getItemAt(new Location(2, 1)));
