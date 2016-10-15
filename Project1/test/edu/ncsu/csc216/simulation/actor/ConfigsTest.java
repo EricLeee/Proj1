@@ -3,8 +3,6 @@ package edu.ncsu.csc216.simulation.actor;
 import static org.junit.Assert.*;
 
 import java.awt.Color;
-import java.lang.reflect.GenericArrayType;
-
 import org.junit.Test;
 /**
  * Test Configs.java

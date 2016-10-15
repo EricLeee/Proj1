@@ -80,12 +80,11 @@ public class EcosystemTest {
 		assertEquals(2, eco.findFirstEmptyNeighbor(l, 3).getRow());
 		assertEquals(1, eco.findFirstEmptyNeighbor(l, 3).getCol());
 		
-		p.act(l, eco);
+		eco.add(p, new Location(1, 0));
 		assertEquals(0, eco.findFirstEmptyNeighbor(l, 0).getRow());
 		
-		Animal c = eco.getItemAt(new Location(1, 0));
 		assertEquals(2, eco.findFirstEmptyNeighbor(new Location(1, 0), 0).getCol());
-		c.act(new Location(1, 0), eco);
+		eco.add(p, new Location(1, 2));
 		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(1, 0), 0).getRow());
 		assertEquals(0, eco.findFirstEmptyNeighbor(new Location(1, 0), 0).getCol());
 		
@@ -123,4 +122,25 @@ public class EcosystemTest {
 		
 		assertEquals(0, grid.findFirstEmptyNeighbor(new Location(0, 0), 3).getRow());
 	}
+	
+	/**
+	 * Test enable living
+	 */
+	@Test
+	public void testEnableTheLiving() {
+	    EcoGrid eco = new Ecosystem(3, 3);
+	    PurePredator p = new PurePredator('l');
+	    for (int i = 0; i < 3; i++) {
+	        for (int j = 0; j < 3; j++) {
+	            eco.add(p, new Location(i, j));
+	        }
+	    }
+	    eco.enableTheLiving();
+	    assertTrue(eco.getItemAt(new Location(1, 1)).isAlive());
+	    
+//	    p.act(new Location(1, 1), eco);
+	    
+//	    eco.getMap()[1][1].act(location, ecoGrid);
+	}
+	
 }

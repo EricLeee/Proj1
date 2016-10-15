@@ -33,7 +33,7 @@ public class Configs {
      * Configuration Constructor
      */
     public Configs() {
-        
+        //constructor with either initConfigs or setToDefaults method
     }
     
     /**

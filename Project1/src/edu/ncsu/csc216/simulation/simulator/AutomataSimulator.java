@@ -1,7 +1,6 @@
 package edu.ncsu.csc216.simulation.simulator;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -33,7 +32,7 @@ public class AutomataSimulator implements SimulatorInterface {
     private char[] symbol;
     /** empty symbol */
     private static final char EMPTY = '.';
-    /** */
+    /** ecosystem map for the simulator */
     private EcoGrid simpleSystem;
     
     /**
@@ -64,7 +63,7 @@ public class AutomataSimulator implements SimulatorInterface {
         for (int i = 0; i < this.numberOfNames; i++) {
             l = new Scanner(initScanner.nextLine());
             symbol[i] = l.next().charAt(0);
-            names[i] = l.nextLine();
+            names[i] = symbol[i] + l.nextLine();
         }
 
         this.simpleSystem = new Ecosystem(SIZE, SIZE);
@@ -95,55 +94,13 @@ public class AutomataSimulator implements SimulatorInterface {
      * @param conf name of the configuration file
      */
     public AutomataSimulator(String init, String conf) {
-        Scanner initScanner = null;
-        
-        try {
-            initScanner = new Scanner(new FileInputStream(init));
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(SIZE_ERROR_MESSAGE);
-        }
-        
-        this.numberOfNames = initScanner.nextInt();
-        if (numberOfNames <= THRESHOLD) {
-            initScanner.close();
-            throw new IllegalArgumentException(THRESHOLD_ERROR_MESSAGE);
-        }
-        
-        this.names = new String[numberOfNames];
-        this.symbol = new char[numberOfNames];
-        
-        initScanner.nextLine();
+        this(init);
 
-        Scanner l = null;
-        for (int i = 0; i < this.numberOfNames; i++) {
-            l = new Scanner(initScanner.nextLine());
-            symbol[i] = l.next().charAt(0);
-            names[i] = l.nextLine();
-        }
-        this.simpleSystem = new Ecosystem(SIZE, SIZE);
-        for (int i = 0; i < SIZE; i++) {
-            String s = initScanner.next();
-            for (int j = 0; j < SIZE; j++) {
-                char c = s.charAt(j);
-                if (c != EMPTY) {
-                    if (c == symbol[0]) {
-                        this.simpleSystem.add(new PurePredator(c), new Location(i, j));
-                    } else if (c == symbol[numberOfNames - 1]) {
-                        this.simpleSystem.add(new PurePrey(c), new Location(i, j));
-                    } else {
-                        this.simpleSystem.getMap()[i][j] = new PredatorPrey(c);
-                    }
-                }
-            }
-        }
-        initScanner.close();
-        l.close();
-        
         Scanner confScanner = null;
         try {
             confScanner = new Scanner(new FileInputStream(conf));
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(THRESHOLD_ERROR_MESSAGE);
+            throw new IllegalArgumentException(SIZE_ERROR_MESSAGE);
         }
         
         Color[] color = new Color[3];
@@ -158,7 +115,7 @@ public class AutomataSimulator implements SimulatorInterface {
         }
         confScanner.nextLine();
         int[] breedTime = new int[3];
-        for (int i = breedTime.length; i >= 0; i--) {
+        for (int i = breedTime.length - 1; i >= 0; i--) {
             breedTime[i] = confScanner.nextInt();
         }
         
@@ -172,7 +129,17 @@ public class AutomataSimulator implements SimulatorInterface {
      * step
      */
     public void step() {
-        
+        simpleSystem.enableTheLiving();
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                Location loc = new Location(i, j);
+                Animal a = simpleSystem.getItemAt(loc);
+                if (a != null) {
+                    a.act(loc, simpleSystem);
+                }
+            }
+        }
+        simpleSystem.buryTheDead();
     }
     
     /**

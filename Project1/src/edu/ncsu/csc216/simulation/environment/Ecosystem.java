@@ -165,6 +165,8 @@ public class Ecosystem implements EcoGrid {
         		state = west;
         		i++;
         		break;
+        	default:
+        	    location = null;
         	}
         }
 		return location;
@@ -226,7 +228,7 @@ public class Ecosystem implements EcoGrid {
     public void enableTheLiving() {
         for(int i = 0; i < this.maxRows; i++) {
             for(int j = 0; j < this.maxCols; j++) {
-                if(map[i][j] != null) {
+                if(map[i][j] != null && map[i][j].isAlive()) {
                     map[i][j].enable();
                 }
             }
@@ -240,7 +242,7 @@ public class Ecosystem implements EcoGrid {
     public void buryTheDead() {
         for (int i = 0; i < this.maxRows; i++) {
             for (int j = 0; j < this.maxCols; j++) {
-                if(!map[i][j].isAlive()) {
+                if(map[i][j] != null && !map[i][j].isAlive()) {
                     map[i][j] = null;
                 }
             }

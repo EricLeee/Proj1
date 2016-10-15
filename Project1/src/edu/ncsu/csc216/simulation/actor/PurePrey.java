@@ -22,6 +22,7 @@ public class PurePrey extends Animal {
      */
     public PurePrey(char s) {
         super(s);
+        this.age = 0;
     }
 
     /**
@@ -38,7 +39,21 @@ public class PurePrey extends Animal {
      */
     @Override
     public void act(Location location, EcoGrid ecoGrid) {
-        // TODO Auto-generated method stub
+        if(this.canAct()) {
+            if(this.pastBreedTime(getTimeSinceLastBreed()) &&
+                    this.breed(location, ecoGrid)) {
+                this.age++;
+                this.disable();
+            } else {
+                this.incrementTimeSinceLastBreed();
+                this.age++;
+                this.move(location, ecoGrid);
+                this.disable();
+            }
+        }
+        if (this.age >= Configs.getPreyStarveTime()) {
+            this.die();
+        }
         
     }
 
@@ -48,7 +63,7 @@ public class PurePrey extends Animal {
      */
     @Override
     protected boolean pastBreedTime(int time) {
-        return time > this.getTimeSinceLastBreed();
+        return time >= Configs.getPreyBreedTime();
     }
 
     /**

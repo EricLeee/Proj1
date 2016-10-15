@@ -34,10 +34,22 @@ public class PurePredator extends Animal {
      */
     @Override
     public void act(Location location, EcoGrid ecoGrid) {
-        if(this.breed(location, ecoGrid)) {
-        	this.disable();
+        if(this.canAct()) {
+            if(this.pastBreedTime(getTimeSinceLastBreed()) &&
+                    this.breed(location, ecoGrid)) {
+                this.disable();
+            } else if (this.eat(location, ecoGrid)) {
+                this.disable();
+            } else {
+                this.incrementTimeSinceLastBreed();
+                this.incrementTimeSinceLastMeal();
+                this.move(location, ecoGrid);
+                this.disable();
+            }
         }
-        
+        if (this.getTimeSinceLastMeal() >= Configs.getPredatorStarveTime()) {
+            this.die();
+        }
     }
 
     /**
@@ -46,7 +58,7 @@ public class PurePredator extends Animal {
      */
     @Override
     protected boolean pastBreedTime(int time) {
-        return time > this.getTimeSinceLastBreed();
+        return time >= Configs.getPredatorBreedTime();
     }
 
     /**

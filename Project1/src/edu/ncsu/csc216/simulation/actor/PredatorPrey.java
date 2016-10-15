@@ -34,11 +34,22 @@ public class PredatorPrey extends Animal {
      */
     @Override
     public void act(Location location, EcoGrid ecoGrid) {
-         if(this.canAct()) {
-             if(this.getTimeSinceLastBreed() >= Configs.getMiddleBreedTime()) {
-                 
-             }
-         }
+        if(this.canAct()) {
+            if(this.pastBreedTime(getTimeSinceLastBreed()) &&
+                    this.breed(location, ecoGrid)) {
+                this.disable();
+            } else if (this.eat(location, ecoGrid)) {
+                this.disable();
+            } else {
+                this.incrementTimeSinceLastBreed();
+                this.incrementTimeSinceLastMeal();
+                this.move(location, ecoGrid);
+                this.disable();
+            }
+        }
+        if (this.getTimeSinceLastMeal() >= Configs.getMiddleStarveTime()) {
+            this.die();
+        }
     }
 
     /**
@@ -47,7 +58,7 @@ public class PredatorPrey extends Animal {
      */
     @Override
     protected boolean pastBreedTime(int time) {
-        return time > this.getTimeSinceLastBreed();
+        return time >= Configs.getMiddleBreedTime();
     }
 
     /**

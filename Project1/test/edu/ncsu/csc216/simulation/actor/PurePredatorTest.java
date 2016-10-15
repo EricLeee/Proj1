@@ -22,7 +22,7 @@ public class PurePredatorTest {
         
         assertEquals(Color.red, p.getColor()); 
         assertFalse(p.pastBreedTime(0));
-        assertTrue(p.pastBreedTime(1));
+        assertTrue(p.pastBreedTime(20));
         
         assertEquals(20, p.getFoodChainRank());
         
